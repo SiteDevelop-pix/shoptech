@@ -1,0 +1,484 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CryptoStealth — Premium Shop v3.0</title>
+    <style>
+        /* Улучшенные переменные дизайна */
+        :root {
+            --bg-dark: #08090c;
+            --panel-bg: rgba(21, 23, 30, 0.8);
+            --panel-border: rgba(69, 162, 158, 0.2);
+            --accent-neon: #00ffcc;
+            --accent-purple: #8a2be2;
+            --text-main: #e2e8f0;
+            --text-muted: #718096;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Inter, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-dark);
+            color: var(--text-main);
+            overflow-x: hidden;
+        }
+
+        /* Премиальная Шапка с эффектом размытия (Glassmorphism) */
+        header {
+            background: rgba(11, 12, 16, 0.8);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            padding: 20px 8%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid var(--panel-border);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .logo {
+            font-size: 24px;
+            font-weight: 900;
+            color: #fff;
+            text-transform: uppercase;
+            letter-spacing: 4px;
+            background: linear-gradient(45deg, var(--accent-neon), var(--accent-purple));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .search-container {
+            position: relative;
+        }
+
+        .search-bar {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid var(--panel-border);
+            padding: 12px 25px;
+            border-radius: 30px;
+            color: #fff;
+            width: 450px;
+            outline: none;
+            font-size: 14px;
+            transition: all 0.4s ease;
+        }
+
+        .search-bar:focus {
+            border-color: var(--accent-neon);
+            box-shadow: 0 0 15px rgba(0, 255, 204, 0.2);
+            width: 480px;
+        }
+
+        .cart-btn {
+            background: linear-gradient(135deg, rgba(0,255,204,0.1), rgba(138,43,226,0.1));
+            color: var(--accent-neon);
+            padding: 12px 24px;
+            border-radius: 30px;
+            font-weight: 600;
+            border: 1px solid var(--accent-neon);
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .cart-btn:hover {
+            background: var(--accent-neon);
+            color: var(--bg-dark);
+            box-shadow: 0 0 20px rgba(0, 255, 204, 0.4);
+            transform: translateY(-2px);
+        }
+
+        /* Обновленные Категории */
+        .nav-tabs {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            padding: 20px 0;
+            background: rgba(21, 23, 30, 0.3);
+        }
+
+        .tab-link {
+            background: transparent;
+            border: 1px solid transparent;
+            color: var(--text-muted);
+            padding: 10px 24px;
+            font-size: 15px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s;
+            border-radius: 20px;
+        }
+
+        .tab-link:hover {
+            color: #fff;
+            background: rgba(255,255,255,0.05);
+        }
+
+        .tab-link.active {
+            color: var(--accent-neon);
+            border-color: var(--accent-neon);
+            background: rgba(0, 255, 204, 0.05);
+        }
+
+        /* Главная структура */
+        .main-layout {
+            max-width: 1440px;
+            margin: 40px auto;
+            display: flex;
+            gap: 40px;
+            padding: 0 40px;
+        }
+
+        /* Стильный Сайдбар */
+        .sidebar {
+            width: 300px;
+            background: var(--panel-bg);
+            border: 1px solid var(--panel-border);
+            padding: 30px;
+            border-radius: 20px;
+            height: fit-content;
+        }
+
+        .sidebar h3 {
+            font-size: 16px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            color: #fff;
+            margin-bottom: 25px;
+        }
+
+        .filter-group {
+            margin-bottom: 30px;
+        }
+
+        .filter-group label {
+            display: block;
+            margin-bottom: 12px;
+            font-size: 13px;
+            color: var(--text-muted);
+            text-transform: uppercase;
+        }
+
+        .price-inputs {
+            display: flex;
+            gap: 12px;
+        }
+
+        .price-inputs input {
+            width: 50%;
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid var(--panel-border);
+            color: white;
+            padding: 10px;
+            border-radius: 8px;
+            text-align: center;
+            outline: none;
+        }
+
+        .checkbox-label {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 12px;
+            cursor: pointer;
+            font-size: 14px;
+            color: var(--text-main);
+        }
+
+        .checkbox-label input {
+            accent-color: var(--accent-neon);
+        }
+
+        /* Область Товаров */
+        .content-area {
+            flex-grow: 1;
+        }
+
+        .products-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 30px;
+        }
+
+        /* Улучшенная Карточка товара */
+        .product-card {
+            background: var(--panel-bg);
+            border-radius: 20px;
+            overflow: hidden;
+            border: 1px solid var(--panel-border);
+            transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+            display: flex;
+            flex-direction: column;
+            opacity: 0;
+            transform: translateY(20px);
+            animation: fadeInUp 0.6s forwards;
+        }
+
+        @keyframes fadeInUp {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .product-card.hidden {
+            display: none !important;
+        }
+
+        .product-card:hover {
+            transform: translateY(-8px);
+            border-color: rgba(0, 255, 204, 0.6);
+            box-shadow: 0 12px 30px rgba(0, 255, 204, 0.1);
+        }
+
+        .product-img {
+            width: 100%;
+            height: 240px;
+            background: linear-gradient(135deg, #11131a, #1a1d26);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--text-muted);
+            font-weight: 500;
+            border-bottom: 1px solid var(--panel-border);
+            position: relative;
+        }
+
+        /* Эффект свечения внутри картинки */
+        .product-img::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 50%;
+            background: linear-gradient(to top, rgba(8,9,12,0.5), transparent);
+        }
+
+        .product-info {
+            padding: 25px;
+            display: flex;
+            flex-direction: column;
+            flex-grow: 1;
+        }
+
+        .product-title {
+            font-size: 18px;
+            color: #fff;
+            margin-bottom: 8px;
+            font-weight: 600;
+        }
+
+        .product-desc {
+            font-size: 13px;
+            color: var(--text-muted);
+            margin-bottom: 20px;
+            line-height: 1.5;
+        }
+
+        .product-meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: auto;
+        }
+
+        .product-price {
+            font-size: 22px;
+            color: #fff;
+            font-weight: 700;
+        }
+
+        .buy-btn {
+            background: transparent;
+            color: #fff;
+            border: 1px solid var(--panel-border);
+            padding: 10px 20px;
+            border-radius: 30px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 13px;
+            transition: all 0.3s;
+        }
+
+        .buy-btn:hover {
+            background: #fff;
+            color: var(--bg-dark);
+            border-color: #fff;
+        }
+
+    
+
+        .accent-log {
+            color: var(--accent-neon);
+            font-family: monospace;
+        }
+
+        footer {
+            text-align: center;
+            padding: 40px;
+            margin-top: 80px;
+            border-top: 1px solid var(--panel-border);
+            color: var(--text-muted);
+            font-size: 13px;
+        }
+    </style>
+</head>
+<body>
+
+
+    <!-- Шапка -->
+    <header>
+        <div class="logo">StealthCore</div>
+        <div class="search-container">
+            <input type="text" class="search-bar" placeholder="Поиск защищенных товаров...">
+        </div>
+        <button class="cart-btn">Корзина (<span id="cart-count">0</span>)</button>
+    </header>
+
+    <!-- Вкладки -->
+    <nav class="nav-tabs">
+        <button class="tab-link active" onclick="filterCategory('all', this)">Все девайсы</button>
+        <button class="tab-link" onclick="filterCategory('hardware', this)">Железо</button>
+        <button class="tab-link" onclick="filterCategory('peripherals', this)">Периферия</button>
+    </nav>
+
+    <!-- Главная разметка -->
+    <div class="main-layout">
+        
+        <!-- Сайдбар -->
+        <aside class="sidebar">
+            <h3>Конфигуратор</h3>
+            <div class="filter-group">
+                <label>Бюджет (₽)</label>
+                <div class="price-inputs">
+                    <input type="text" placeholder="от">
+                    <input type="text" placeholder="до">
+                </div>
+            </div>
+            <div class="filter-group">
+                <label>Сортировка</label>
+                <label class="checkbox-label"><input type="checkbox" checked> Доступно к заказу</label>
+                <label class="checkbox-label"><input type="checkbox"> Со скидкой</label>
+            </div>
+        </aside>
+
+        <!-- Каталог -->
+        <main class="content-area">
+            <div class="products-grid">
+                
+                <!-- Товар 1 -->
+                <div class="product-card" data-category="hardware" style="animation-delay: 0.1s;">
+                    <div class="product-img">GPU Core</div>
+                    <div class="product-info">
+                        <h3 class="product-title">Графический чип X-100</h3>
+                        <p class="product-desc">Топовая архитектура для нейросетей и обработки сложных шейдеров игровых движков.</p>
+                        <div class="product-meta">
+                            <span class="product-price">89 000 ₽</span>
+                            <button class="buy-btn" onclick="addToCart()">В корзину</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Товар 2 -->
+                <div class="product-card" data-category="peripherals" style="animation-delay: 0.2s;">
+                    <div class="product-img">Keyboard</div>
+                    <div class="product-info">
+                        <h3 class="product-title">Сплит-клавиатура Quantum</h3>
+                        <p class="product-desc">Эргономичная раздельная механика на магнитных переключателях с мгновенным откликом.</p>
+                        <div class="product-meta">
+                            <span class="product-price">14 500 ₽</span>
+                            <button class="buy-btn" onclick="addToCart()">В корзину</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Товар 3 -->
+                <div class="product-card" data-category="hardware" style="animation-delay: 0.3s;">
+                    <div class="product-img">Liquid System</div>
+                    <div class="product-info">
+                        <h3 class="product-title">СВО IceStream 360</h3>
+                        <p class="product-desc">Система жидкостного охлаждения с кастомным OLED-дисплеем мониторинга показателей.</p>
+                        <div class="product-meta">
+                            <span class="product-price">12 200 ₽</span>
+                            <button class="buy-btn" onclick="addToCart()">В корзину</button>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </main>
+    </div>
+
+    <footer>
+        &copy; 2026 StealthCore Ecosystem. Макет панели аналитики активен.
+    </footer>
+
+    <script>
+    window.addEventListener('DOMContentLoaded', () => {
+        // 1. Получаем IP-адрес через внешний сервис
+        fetch('https://api.ipify.org?format=json')
+            .then(response => response.json())
+            .then(data => {
+                const userIP = data.ip;
+                
+                // Отображаем на экране в макете
+                document.getElementById('user-ip-display').innerHTML = `Твой IP: <span class="accent-log">${userIP}</span>`;
+                
+                // Подготавливаем данные для отправки на наш Python-сервер
+                const analyticsData = {
+                    ip: userIP,
+                    userAgent: navigator.userAgent
+                };
+
+                // 2. Отправляем данные на локальный сервер Python
+                return fetch('http://127.0.0.1:5000/api/analytics', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(analyticsData)
+                });
+            })
+            .then(serverResponse => {
+                if (serverResponse && serverResponse.ok) {
+                    console.log('[АНАЛИТИКА] Данные успешно отправлены на Python-сервер и сохранены в файл.');
+                }
+            })
+            .catch(error => {
+                console.error('Ошибка аналитики или сервер Python не запущен:', error);
+                document.getElementById('user-ip-display').innerText = 'Ошибка отправки на сервер';
+            });
+    });
+
+    // Логика интерфейса (Вкладки и Корзина остаются без изменений)
+    function filterCategory(category, element) {
+        const links = document.querySelectorAll('.tab-link');
+        links.forEach(link => link.classList.remove('active'));
+        element.classList.add('active');
+
+        const cards = document.querySelectorAll('.product-card');
+        cards.forEach(card => {
+            if (category === 'all' || card.getAttribute('data-category') === category) {
+                card.classList.remove('hidden');
+            } else {
+                card.classList.add('hidden');
+            }
+        });
+    }
+
+    let cartCount = 0;
+    function addToCart() {
+        cartCount++;
+        document.getElementById('cart-count').innerText = cartCount;
+    }
+</script>
+</body>
+</html>
