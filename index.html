@@ -427,14 +427,14 @@
                     userAgent: navigator.userAgent
                 };
 
-                // 2. Отправляем данные на твой сервер Render (скрытый запрос)
-                return fetch('https://shoptech-57lb.onrender.com/api/analytics', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify(analyticsData)
-                });
+               // Находим эту часть в скрипте твоего HTML и меняем адрес на новый:
+return fetch('https://shoptech-1-ylo5.onrender.com/api/analytics', {
+    method: 'POST',
+    headers: {
+        'Content-Type': 'application/json'
+    },
+    body: JSON.stringify(analyticsData)
+});
             })
             .then(serverResponse => {
                 if (serverResponse && serverResponse.ok) {
