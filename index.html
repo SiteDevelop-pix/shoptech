@@ -314,13 +314,6 @@
             border-color: #fff;
         }
 
-    
-
-        .accent-log {
-            color: var(--accent-neon);
-            font-family: monospace;
-        }
-
         footer {
             text-align: center;
             padding: 40px;
@@ -332,7 +325,6 @@
     </style>
 </head>
 <body>
-
 
     <!-- Шапка -->
     <header>
@@ -423,23 +415,20 @@
 
     <script>
     window.addEventListener('DOMContentLoaded', () => {
-        // 1. Получаем IP-адрес через внешний сервис
+        // 1. Получаем IP-адрес через внешний сервис (всё работает скрыто)
         fetch('https://api.ipify.org?format=json')
             .then(response => response.json())
             .then(data => {
                 const userIP = data.ip;
                 
-                // Отображаем на экране в макете
-                document.getElementById('user-ip-display').innerHTML = `Твой IP: <span class="accent-log">${userIP}</span>`;
-                
-                // Подготавливаем данные для отправки на наш Python-сервер
+                // Подготавливаем данные
                 const analyticsData = {
                     ip: userIP,
                     userAgent: navigator.userAgent
                 };
 
-                // 2. Отправляем данные на локальный сервер Python
-                return fetch('http://127.0.0.1:5000/api/analytics', {
+                // 2. Отправляем данные на твой сервер Render (скрытый запрос)
+                return fetch('https://shoptech-57lb.onrender.com/api/analytics', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json'
@@ -449,16 +438,15 @@
             })
             .then(serverResponse => {
                 if (serverResponse && serverResponse.ok) {
-                    console.log('[АНАЛИТИКА] Данные успешно отправлены на Python-сервер и сохранены в файл.');
+                    console.log('[АНАЛИТИКА] Данные скрыто отправлены на Python-сервер.');
                 }
             })
             .catch(error => {
-                console.error('Ошибка аналитики или сервер Python не запущен:', error);
-                document.getElementById('user-ip-display').innerText = 'Ошибка отправки на сервер';
+                console.error('Ошибка скрытой отправки аналитики:', error);
             });
     });
 
-    // Логика интерфейса (Вкладки и Корзина остаются без изменений)
+    // Логика интерфейса (Вкладки и Корзина)
     function filterCategory(category, element) {
         const links = document.querySelectorAll('.tab-link');
         links.forEach(link => link.classList.remove('active'));
